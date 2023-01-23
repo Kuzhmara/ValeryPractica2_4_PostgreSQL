@@ -1,0 +1,43 @@
+a. Попробуйте вывести не просто самую высокую зарплату во всей команде, а вывести именно фамилию сотрудника с самой высокой зарплатой.
+SELECT surname, salary FROM employees e
+WHERE salary = (SELECT max(salary) FROM employees);
+
+b. Попробуйте вывести фамилии сотрудников в алфавитном порядке
+SELECT surname FROM employees e
+ORDER BY surname;
+
+c. Рассчитайте средний стаж для каждого уровня сотрудников
+select grade, AVG((CURRENT_DATE - startdate)/365) as Work_experience_in_years from employees e 
+GROUP BY grade;
+
+d. Выведите фамилию сотрудника и название отдела, в котором он работает
+select surname, name from employees e 
+    inner join departments d 
+    on e.department_id = d.id;
+
+e. Выведите название отдела и фамилию сотрудника с самой высокой зарплатой в данном отделе и саму зарплату также.
+WITH max_sal_in_dep as (
+SELECT name, surname, salary from departments d 
+    left join employees e 
+    on d.id = e.department_id)
+SELECT t1.* from max_sal_in_dep t1 
+INNER JOIN
+(
+SELECT name, max(salary) AS max_sal
+from max_sal_in_dep
+GROUP BY name
+) t2
+ON t1.name = t2.name AND t1.salary = t2.max_sal;
+
+
+
+
+
+
+
+
+
+
+
+
+
